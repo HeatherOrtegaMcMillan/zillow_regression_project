@@ -6,6 +6,8 @@ import pandas as pd
 import numpy as np
 from env import host, password, user
 import os
+import scipy.stats as stats
+
 
 from sklearn.model_selection import train_test_split
 
@@ -198,6 +200,16 @@ def drop_the_cols(df):
     
     return df
 
+#################################### remove outliers ####################################
+
+def remove_outlier(df):
+    '''
+    This function takes in a dataframe
+    It outputs a the dataframe with the outliers that have a Z score above 3 or below -3 removed
+    '''
+    df = df[(np.abs(stats.zscore(df)) < 3).all(axis=1)]
+    return df
+
 #################################### Function to get Zillow Data ####################################
 
 def wrangle_zillow():
@@ -212,6 +224,12 @@ def wrangle_zillow():
     df = drop_the_cols(df)
 
     df['transaction_date'] = pd.to_datetime(df.transaction_date)
+
+    # Remove outliers from columns that need to be removed
+    df_outliers = remove_outlier(df[['sqft_calculated', 'bedroom_cnt', 'bathroom_cnt']])
+
+    # only put back the ones that had outliers in it 
+    df = df[df.index.isin(df_outliers.index)]
 
     return df
 
