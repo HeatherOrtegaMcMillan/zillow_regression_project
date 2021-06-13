@@ -104,13 +104,15 @@ def get_zillow_data():
                 bathroomcnt AS bathroom_cnt,
                 bedroomcnt AS bedroom_cnt,
                 calculatedfinishedsquarefeet AS sqft_calculated,
+                poolcnt AS has_pool,
+                garagecarcnt AS garage_car_count,
                 p.fips AS fips,
                 taxamount AS tax_amount,
                 transactiondate AS transaction_date
                 FROM properties_2017 AS p
                 JOIN predictions_2017 AS pred ON p.`parcelid` = pred.`parcelid`
                 WHERE p.`propertylandusetypeid` IN (261) 
-                    AND pred.`transactiondate` BETWEEN '2017-05-01' AND '2017-08-31'
+                	AND pred.`transactiondate` BETWEEN '2017-05-01' AND '2017-08-31';
                 '''
     if os.path.isfile('zillow_data.csv'):
         
@@ -210,6 +212,23 @@ def remove_outlier(df):
     df = df[(np.abs(stats.zscore(df)) < 3).all(axis=1)]
     return df
 
+#################################### pools and garages ####################################
+def pool_and_garage(df):
+    '''
+    This function fixes the NaNs in these two columns (changes them to 0s). 
+    In the end two boolian/categorical, values has_pool and has_garage.
+    '''
+    df['has_pool'] = df.has_pool.fillna(value=0)
+
+    df.garage_car_count.fillna(value=0, inplace=True)
+
+    df['has_garage'] = (df.garage_car_count != 0).astype(int)
+
+    df = df.drop(columns = 'garage_car_count')
+
+    return df
+
+
 #################################### Function to get Zillow Data ####################################
 
 def wrangle_zillow():
@@ -220,6 +239,8 @@ def wrangle_zillow():
     '''
 
     df = get_zillow_data()
+
+    df = pool_and_garage(df)
 
     df = drop_the_cols(df)
 
