@@ -228,6 +228,21 @@ def pool_and_garage(df):
 
     return df
 
+####################################Get Counties ####################################
+
+def cali_counties(df):
+    '''
+    This function takes in the zillow dataframe, uses the fips column and a dictionary of counties
+    and adds a column called county with where the house is located
+    returns a dataframe with the column attached 
+    '''
+    # make dictionary with fips values and county names
+    counties = {6037: 'LA', 6059: 'Orange', 6111: 'Ventura'}
+
+    # use .replace to create an new column called county
+    df['county'] = df.fips.replace(counties)
+
+    return df
 
 #################################### Function to get Zillow Data ####################################
 
@@ -241,6 +256,10 @@ def wrangle_zillow():
     df = get_zillow_data()
 
     df = pool_and_garage(df)
+
+    df = cali_counties(df)
+
+    df['tax_rate'] = df.tax_amount / df.tax_value
 
     df = drop_the_cols(df)
 
