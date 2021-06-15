@@ -187,3 +187,14 @@ def plot_the_dots(actuals, predictions, residuals):
     ax.set(title = 'Actual vs Residual',ylabel='Residual', xlabel='Actual')
     ax.hlines(0, *ax.get_xlim(), ls=':', color='gray')
     ax.text(text_loc, -3, f'RMSE: {rmse:.2f}')
+
+#####################################Compare RMSE function##########################################
+
+def compare_rmse(pred_actuals):
+    '''
+    This function takes in a list of tuples ex [(df.pred1, df.actuals), (df.pred2, y_validate)]
+    unpacks the tuple, and prints out the Root Mean Squared Error for each 
+    '''
+    for prediction, actual in pred_actuals:
+        rmse = mean_squared_error(prediction, actual, squared = False)
+        print(f'RMSE for {prediction.name}: {rmse} ')
