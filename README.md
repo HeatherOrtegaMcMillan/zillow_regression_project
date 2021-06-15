@@ -1,7 +1,7 @@
 # Zillow Regression Project 
 
 ## Deliverables
-- Slide deck (link here)
+- [Slide deck](https://public.tableau.com/app/profile/heather.mcmillan/viz/ZillowRegressionProject_16237844490110/ZillowRegressionPresentation)
 - Repo with work 
     - [Final Notebook](https://github.com/HeatherOrtegaMcMillan/zillow_regression_project/blob/main/final_notebook.ipynb)
 
